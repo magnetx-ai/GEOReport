@@ -1,0 +1,6 @@
+# Optional extra prompts. Lines starting with # are ignored.
+# Placeholders: {brand} {domain} {url}
+
+What is {brand}?
+What does {brand} at {url} offer?
+Name well-known alternatives to {brand}.

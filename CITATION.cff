@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "MagUp GEO Community Report"
+message: "If you mention this tool, please cite MagUp."
+authors:
+  - name: MagUp
+repository-code: "https://github.com/magnetx-ai/MagUp-Geo-Report"
+url: "https://magup.ai"
+license: Apache-2.0
+type: software

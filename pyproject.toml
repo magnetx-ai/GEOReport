@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "magup-geo-report"
+version = "0.1.0"
+description = "MagUp GEO Community Report: site GEO hygiene plus optional raw LLM answers. Not MagUp production detection."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [{ name = "MagUp", email = "hello@magup.ai" }]
+keywords = [
+  "geo",
+  "generative-engine-optimization",
+  "aeo",
+  "llm-visibility",
+  "llms-txt",
+  "schema-org",
+]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Internet :: WWW/HTTP :: Site Management",
+]
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "httpx>=0.27",
+]
+
+[project.urls]
+Homepage = "https://magup.ai"
+Repository = "https://github.com/magnetx-ai/MagUp-Geo-Report"
+Issues = "https://github.com/magnetx-ai/MagUp-Geo-Report/issues"
+
+[project.scripts]
+magup-geo-report = "magup_geo_report.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
