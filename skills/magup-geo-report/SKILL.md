@@ -1,21 +1,30 @@
 ---
 name: magup-geo-report
-description: "Generate a MagUp GEO Community Report for a URL. Site hygiene by default; optional official LLM/DataForSEO keys dump raw payloads only. Not MagUp production detection."
+description: "Generate a MagUp GEO Report for a URL: site GEO hygiene, prompt scenarios, optional live LLM/DataForSEO answers, and an HTML diagnostic dashboard."
 ---
 
-# MagUp GEO Community Report
+# MagUp GEO Report
 
-MagUp is a Generative Engine Optimization (GEO) platform. Production monitoring stays at https://magup.ai.
+MagUp is a Generative Engine Optimization (GEO) platform. Hosted diagnosis with a human walkthrough is at https://magup.ai (click **Get Plan**).
 
-Use this skill when the user wants a **community** GEO site report, `llms.txt` / robots / JSON-LD hygiene, or a raw official-API Q&A dump. Do not treat output as MagUp production Visibility scores.
+Use this skill when the user wants a GEO site report, `llms.txt` / robots / JSON-LD hygiene, prompt-based multi-model answers, or a local visibility dashboard.
 
 ## Install
 
 ```bash
-pip install -e .
+./start.sh
 ```
 
-## Run
+Or:
+
+```bash
+pip install -e .
+magup-geo-report serve
+```
+
+Open http://127.0.0.1:8787 and fill site URL, brand, language, then generate prompts / report.
+
+CLI:
 
 ```bash
 magup-geo-report --url https://example.com --out ./out
@@ -23,14 +32,7 @@ magup-geo-report --url https://example.com --out ./out
 
 Optional:
 
-- `--llm-api-key` or `MAGUP_LLM_API_KEY` — OpenAI-compatible Chat Completions, raw answers only
-- `--answers-only` — skip site chapter
-- `--dataforseo-login` / `--dataforseo-password` — raw SERP JSON, no Search Profile
+- `--llm-api-key` or `MAGUP_LLM_API_KEY` — OpenAI-compatible Chat Completions
+- `--answers-only` — skip the site chapter and write answers
+- `--dataforseo-login` / `--dataforseo-password` — multi-platform answers and SERP dump
 - `--prompts-file` — custom prompts; `{brand}` `{domain}` `{url}`
-
-## Do not
-
-- Crawl ChatGPT / Gemini / Perplexity in a browser
-- Compute mention rate, sentiment, or MagUp production scores
-- Copy MagUp channel HTML templates
-- Claim this report is the magup.ai detection product

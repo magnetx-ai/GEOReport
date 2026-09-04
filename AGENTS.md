@@ -1,8 +1,8 @@
-# MagUp GEO Community Report
+# MagUp GEO Report
 
-MagUp is a Generative Engine Optimization (GEO) platform. Production LLM visibility monitoring stays at https://magup.ai.
+MagUp is a Generative Engine Optimization (GEO) platform. Hosted diagnosis with a human walkthrough lives at https://magup.ai — open the site, click **Get Plan**, and share a few brand details.
 
-This repository is the **community** report generator: site GEO hygiene by default; optional user-supplied official APIs dump **raw** answers or search JSON. It does not compute MagUp production scores, mention rates, or semantic analysis.
+This repository is the open-source report generator: site GEO hygiene, prompt scenarios, multi-model answer capture, and a local diagnostic dashboard.
 
 ## Agent install
 
@@ -13,6 +13,11 @@ Clone https://github.com/magnetx-ai/MagUp-Geo-Report and read skills/magup-geo-r
 Then run:
 
 ```bash
-pip install -e .
-magup-geo-report --url https://example.com --out ./out
+./start.sh
+```
+
+Or CLI:
+
+```bash
+./start.sh --url https://example.com --out ./out
 ```

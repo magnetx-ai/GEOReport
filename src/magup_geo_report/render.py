@@ -7,9 +7,17 @@ from pathlib import Path
 from typing import Any
 
 from magup_geo_report import DISPLAY_NAME, PRODUCT_URL, REPO_URL, __version__
-from magup_geo_report.site_audit import Check, SiteAudit
+from magup_geo_report.geo_report import render_geo_html
+from magup_geo_report.i18n import chrome
+from magup_geo_report.site_audit import SiteAudit
 
 STATUS_LABEL = {"pass": "Pass", "warn": "Warn", "fail": "Fail", "skip": "Skip"}
+
+
+def _strings(meta: dict[str, Any] | None) -> dict[str, str]:
+    if meta and isinstance(meta.get("strings"), dict):
+        return meta["strings"]
+    return chrome((meta or {}).get("language") or "en")
 
 
 def _esc(value: Any) -> str:
@@ -23,20 +31,57 @@ def render_markdown(
     search_raw: dict[str, Any] | None,
     answers_path: str | None,
     search_path: str | None,
+    meta: dict[str, Any] | None = None,
 ) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    s = _strings(meta)
+    brand = (meta or {}).get("brand") or (audit.brand if audit else "")
     lines = [
         f"# {DISPLAY_NAME}",
         "",
-        f"> **Community / 社区版.** This is not a MagUp production GEO detection report. "
-        f"It does not include MagUp production scores, mention rates, or semantic analysis (021). "
-        f"Full monitoring and scored reports: [{PRODUCT_URL}]({PRODUCT_URL})",
+        f"> {s['not_production']} "
+        f"[{PRODUCT_URL}]({PRODUCT_URL})",
         "",
         f"- Generated: {now}",
         f"- Generator: magup-geo-report {__version__}",
         f"- Repository: {REPO_URL}",
+        f"- Brand: {brand}",
         "",
     ]
+    intro = (meta or {}).get("brand_intro") or ""
+    competitors = (meta or {}).get("competitors") or []
+    analysis = (meta or {}).get("analysis")
+    if intro or competitors:
+        lines += [f"## {s['brief']}", ""]
+        if intro:
+            lines += [intro, ""]
+        if competitors:
+            lines += [f"{s['competitors']}: " + ", ".join(competitors), ""]
+    if analysis:
+        totals = analysis.get("totals") or {}
+        lines += [
+            f"## {s.get('sec_visibility', 'Visibility')}",
+            "",
+            analysis.get("disclaimer", ""),
+            "",
+            f"- {s.get('kpi_mention', 'Brand mentioned')}: {totals.get('brand_rate', 0)}% ({totals.get('brand_hit', 0)}/{totals.get('usable', 0)})",
+            f"- {s.get('kpi_cite', 'Official site cited')}: {totals.get('cite_rate', 0)}% ({totals.get('own_site_cited', 0)}/{totals.get('usable', 0)})",
+            f"- {s.get('kpi_competitor', 'Competitor mentioned')}: {totals.get('competitor_rate', 0)}% ({totals.get('competitor_hit', 0)}/{totals.get('usable', 0)})",
+            f"- {s.get('kpi_samples', 'Samples')}: {totals.get('samples', 0)}",
+            "",
+        ]
+        for _code, row in (analysis.get("by_platform") or {}).items():
+            lines += [
+                f"### {row.get('label') or _code}",
+                "",
+                f"- mention {row.get('brand_rate')}% · cite {row.get('cite_rate')}% · competitor {row.get('competitor_rate')}% · n={row.get('total')}",
+                "",
+            ]
+    planned = (meta or {}).get("prompts") or []
+    if planned and not answers:
+        lines += ["## Prompts", ""]
+        for index, text in enumerate(planned, start=1):
+            lines += [f"{index}. {text}", ""]
     if audit:
         lines += [
             f"**URL:** {audit.requested_url}  ",
@@ -44,39 +89,43 @@ def render_markdown(
             f"**Domain:** {audit.domain}  ",
             f"**Brand (heuristic):** {audit.brand}",
             "",
-            "## Site GEO hygiene",
+            f"## {s['hygiene']}",
             "",
-            "| Check | Status | Detail |",
+            f"| {s['check']} | {s['status']} | {s['detail']} |",
             "| --- | --- | --- |",
         ]
         for check in audit.checks:
-            lines.append(f"| {check.title} | {STATUS_LABEL.get(check.status, check.status)} | {check.detail.replace('|', '/')} |")
+            lines.append(
+                f"| {check.title} | {s.get(check.status, STATUS_LABEL.get(check.status, check.status))} | {check.detail.replace('|', '/')} |"
+            )
         lines += [
             "",
-            "### AI crawler robots.txt",
+            f"### {s['ai_bots']}",
             "",
-            "| Bot | Status | Detail |",
+            f"| {s['bot']} | {s['status']} | {s['detail']} |",
             "| --- | --- | --- |",
         ]
         for row in audit.bot_rules:
-            lines.append(f"| {row['bot']} | {STATUS_LABEL.get(row['status'], row['status'])} | {row['detail'].replace('|', '/')} |")
+            lines.append(
+                f"| {row['bot']} | {s.get(row['status'], STATUS_LABEL.get(row['status'], row['status']))} | {row['detail'].replace('|', '/')} |"
+            )
         lines += [
             "",
-            "### On-page",
+            f"### {s['onpage']}",
             "",
-            f"- Title: {audit.onpage.get('title') or '(missing)'}",
-            f"- Description: {audit.onpage.get('description') or '(missing)'}",
-            f"- Canonical: {audit.onpage.get('canonical') or '(missing)'}",
-            f"- H1: {', '.join(audit.onpage.get('h1') or []) or '(none)'}",
-            f"- JSON-LD @type: {', '.join(audit.json_ld_types) or '(none)'}",
+            f"- {s['title']}: {audit.onpage.get('title') or s['missing']}",
+            f"- {s['description']}: {audit.onpage.get('description') or s['missing']}",
+            f"- {s['canonical']}: {audit.onpage.get('canonical') or s['missing']}",
+            f"- {s['h1']}: {', '.join(audit.onpage.get('h1') or []) or s['none']}",
+            f"- {s['jsonld']}: {', '.join(audit.json_ld_types) or s['none']}",
             "",
         ]
     else:
-        lines += ["Site hygiene chapter skipped (`--answers-only`).", ""]
+        lines += [s["skipped"], ""]
 
     if answers:
         lines += [
-            "## Raw LLM answers (no analysis)",
+            f"## {s['raw_answers']}",
             "",
             answers.get("disclaimer", ""),
             "",
@@ -84,8 +133,12 @@ def render_markdown(
             "",
         ]
         for index, item in enumerate(answers.get("items") or [], start=1):
+            platform = item.get("platform") or ""
+            heading = f"### Q{item.get('prompt_index') or index}"
+            if platform:
+                heading += f" · {platform}"
             lines += [
-                f"### Q{index}",
+                heading,
                 "",
                 item.get("prompt", ""),
                 "",
@@ -96,40 +149,20 @@ def render_markdown(
             ]
     if search_raw:
         lines += [
-            "## Raw DataForSEO payload (no Search Profile)",
+            f"## {s['raw_search']}",
             "",
             search_raw.get("disclaimer", ""),
             "",
             f"Saved file: `{search_path or 'search-raw.json'}`",
             "",
-            "The JSON is not interpreted here on purpose.",
-            "",
         ]
     lines += [
         "---",
         "",
-        f"Need LLM visibility, multi-model mention tracking, and a MagUp production report? "
-        f"Submit your site at [{PRODUCT_URL}]({PRODUCT_URL}).",
+        f"{s['cta_title']} {s['cta_body']} [{PRODUCT_URL}]({PRODUCT_URL}).",
         "",
     ]
     return "\n".join(lines) + "\n"
-
-
-def _pill(status: str) -> str:
-    return f'<span class="pill {status}">{_esc(STATUS_LABEL.get(status, status))}</span>'
-
-
-def _check_rows(checks: list[Check]) -> str:
-    rows = []
-    for check in checks:
-        rows.append(
-            "<tr>"
-            f"<td>{_esc(check.title)}</td>"
-            f"<td>{_pill(check.status)}</td>"
-            f"<td>{_esc(check.detail)}</td>"
-            "</tr>"
-        )
-    return "\n".join(rows)
 
 
 def render_html(
@@ -137,163 +170,17 @@ def render_html(
     *,
     answers: dict[str, Any] | None,
     search_raw: dict[str, Any] | None,
-    answers_path: str | None,
-    search_path: str | None,
+    answers_path: str | None = None,
+    search_path: str | None = None,
+    meta: dict[str, Any] | None = None,
 ) -> str:
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    brand = audit.brand if audit else "Site"
-    domain = audit.domain if audit else ""
-    hygiene = ""
-    if audit:
-        bot_rows = "\n".join(
-            "<tr>"
-            f"<td>{_esc(row['bot'])}</td>"
-            f"<td>{_pill(row['status'])}</td>"
-            f"<td>{_esc(row['detail'])}</td>"
-            "</tr>"
-            for row in audit.bot_rules
-        )
-        h1 = ", ".join(audit.onpage.get("h1") or []) or "(none)"
-        types = ", ".join(audit.json_ld_types) or "(none)"
-        hygiene = f"""
-<section>
-  <h2>Site GEO hygiene</h2>
-  <p class="meta">Requested {_esc(audit.requested_url)} → {_esc(audit.final_url)}</p>
-  <table>
-    <thead><tr><th>Check</th><th>Status</th><th>Detail</th></tr></thead>
-    <tbody>
-      {_check_rows(audit.checks)}
-    </tbody>
-  </table>
-  <h3>AI crawler robots.txt</h3>
-  <table>
-    <thead><tr><th>Bot</th><th>Status</th><th>Detail</th></tr></thead>
-    <tbody>
-      {bot_rows}
-    </tbody>
-  </table>
-  <h3>On-page</h3>
-  <ul>
-    <li>Title: {_esc(audit.onpage.get("title") or "(missing)")}</li>
-    <li>Description: {_esc(audit.onpage.get("description") or "(missing)")}</li>
-    <li>Canonical: {_esc(audit.onpage.get("canonical") or "(missing)")}</li>
-    <li>H1: {_esc(h1)}</li>
-    <li>JSON-LD @type: {_esc(types)}</li>
-  </ul>
-</section>
-"""
-    else:
-        hygiene = "<section><p>Site hygiene chapter skipped (<code>--answers-only</code>).</p></section>"
-
-    answers_html = ""
-    if answers:
-        blocks = []
-        for index, item in enumerate(answers.get("items") or [], start=1):
-            body = item.get("answer") or item.get("error") or "(empty)"
-            blocks.append(
-                f"<article class='qa'><h3>Q{index}</h3>"
-                f"<p class='prompt'>{_esc(item.get('prompt'))}</p>"
-                f"<pre>{_esc(body)}</pre></article>"
-            )
-        answers_html = f"""
-<section>
-  <h2>Raw LLM answers (no analysis)</h2>
-  <p class="disclaimer">{_esc(answers.get("disclaimer"))}</p>
-  <p class="meta">File: {_esc(answers_path or "answers.json")}</p>
-  {"".join(blocks)}
-</section>
-"""
-    search_html = ""
-    if search_raw:
-        snippet = json.dumps(search_raw.get("response"), ensure_ascii=False, indent=2)[:4000] if search_raw.get("response") is not None else json.dumps(search_raw, ensure_ascii=False, indent=2)[:4000]
-        search_html = f"""
-<section>
-  <h2>Raw DataForSEO payload (no Search Profile)</h2>
-  <p class="disclaimer">{_esc(search_raw.get("disclaimer"))}</p>
-  <p class="meta">File: {_esc(search_path or "search-raw.json")}</p>
-  <pre>{_esc(snippet)}</pre>
-</section>
-"""
-
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{_esc(DISPLAY_NAME)} — {_esc(brand)}</title>
-  <style>
-    :root {{
-      --ink: #14202b;
-      --muted: #5b6b78;
-      --paper: #f6f3ee;
-      --card: #fffdf9;
-      --line: #e4ddd3;
-      --accent: #c45c26;
-      --pass: #2f6f4e;
-      --warn: #9a6b12;
-      --fail: #a33b32;
-    }}
-    * {{ box-sizing: border-box; }}
-    body {{
-      margin: 0; font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
-      background: var(--paper); color: var(--ink); line-height: 1.5;
-    }}
-    header {{
-      padding: 28px 8vw 16px; border-bottom: 1px solid var(--line);
-    }}
-    .ribbon {{
-      display: inline-block; letter-spacing: 0.14em; text-transform: uppercase;
-      font-size: 11px; font-family: ui-sans-serif, system-ui, sans-serif;
-      background: var(--accent); color: white; padding: 4px 10px; border-radius: 999px;
-    }}
-    h1 {{ font-size: 32px; margin: 12px 0 8px; }}
-    .sub {{ color: var(--muted); max-width: 720px; }}
-    main {{ padding: 24px 8vw 80px; max-width: 980px; }}
-    section {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 18px 0; }}
-    h2 {{ margin-top: 0; font-size: 22px; }}
-    table {{ width: 100%; border-collapse: collapse; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 14px; }}
-    th, td {{ text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }}
-    .pill {{ font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 8px; border-radius: 999px; }}
-    .pill.pass {{ background: #e5f4ea; color: var(--pass); }}
-    .pill.warn {{ background: #f8edd3; color: var(--warn); }}
-    .pill.fail {{ background: #f8e3e0; color: var(--fail); }}
-    .pill.skip {{ background: #eee; color: var(--muted); }}
-    pre {{ white-space: pre-wrap; background: #141a20; color: #f4efe8; padding: 12px; border-radius: 8px; font-size: 13px; overflow: auto; }}
-    .disclaimer, .meta {{ color: var(--muted); font-size: 14px; }}
-    .prompt {{ font-weight: 600; }}
-    footer {{
-      margin: 28px 8vw; padding: 20px 22px; background: #14202b; color: #f6f3ee; border-radius: 12px;
-      font-family: ui-sans-serif, system-ui, sans-serif;
-    }}
-    footer a {{ color: #f3c19a; }}
-    .zh {{ font-size: 14px; color: #c8d0d6; }}
-  </style>
-</head>
-<body>
-  <header>
-    <div class="ribbon">Community · not production scores</div>
-    <h1>{_esc(DISPLAY_NAME)}</h1>
-    <p class="sub">
-      MagUp is a Generative Engine Optimization (GEO) platform.
-      This file is a <strong>community</strong> report for {_esc(brand)} {_esc(domain)}.
-      It is <strong>not</strong> a MagUp production detection report: no MagUp scores, no mention rates, no semantic analysis.
-    </p>
-    <p class="meta">Generated { _esc(now) } · magup-geo-report {_esc(__version__)}</p>
-  </header>
-  <main>
-    {hygiene}
-    {answers_html}
-    {search_html}
-  </main>
-  <footer>
-    <p><strong>Need the full MagUp GEO detection report?</strong></p>
-    <p>Submit your site at <a href="{_esc(PRODUCT_URL)}">{_esc(PRODUCT_URL)}</a> for multi-model visibility monitoring and a production MagUp report.</p>
-    <p class="zh">完整 LLM 可见度监测与商业报告只在 magup.ai 出具。本页为社区精简版，不含生产评分。</p>
-    <p class="zh">Repo: <a href="{_esc(REPO_URL)}">{_esc(REPO_URL)}</a></p>
-  </footer>
-</body>
-</html>
-"""
+    return render_geo_html(
+        audit,
+        answers=answers,
+        search_raw=search_raw,
+        analysis=(meta or {}).get("analysis"),
+        meta=meta,
+    )
 
 
 def write_outputs(
@@ -302,11 +189,13 @@ def write_outputs(
     audit: SiteAudit | None,
     answers: dict[str, Any] | None,
     search_raw: dict[str, Any] | None,
+    meta: dict[str, Any] | None = None,
 ) -> dict[str, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, Path] = {}
     answers_name = "answers.json" if answers else None
     search_name = "search-raw.json" if search_raw else None
+    analysis = (meta or {}).get("analysis")
     if audit:
         audit_path = out_dir / "site-audit.json"
         audit_path.write_text(json.dumps(audit.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
@@ -315,6 +204,10 @@ def write_outputs(
         path = out_dir / "answers.json"
         path.write_text(json.dumps(answers, ensure_ascii=False, indent=2), encoding="utf-8")
         written["answers"] = path
+    if analysis:
+        path = out_dir / "analysis.json"
+        path.write_text(json.dumps(analysis, ensure_ascii=False, indent=2), encoding="utf-8")
+        written["analysis"] = path
     if search_raw:
         path = out_dir / "search-raw.json"
         path.write_text(json.dumps(search_raw, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -325,6 +218,7 @@ def write_outputs(
         search_raw=search_raw,
         answers_path=answers_name,
         search_path=search_name,
+        meta=meta,
     )
     html_doc = render_html(
         audit,
@@ -332,9 +226,10 @@ def write_outputs(
         search_raw=search_raw,
         answers_path=answers_name,
         search_path=search_name,
+        meta=meta,
     )
-    md_path = out_dir / "community-report.md"
-    html_path = out_dir / "community-report.html"
+    md_path = out_dir / "geo-report.md"
+    html_path = out_dir / "geo-report.html"
     md_path.write_text(md, encoding="utf-8")
     html_path.write_text(html_doc, encoding="utf-8")
     written["markdown"] = md_path

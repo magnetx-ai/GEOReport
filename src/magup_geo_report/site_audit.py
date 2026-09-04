@@ -31,6 +31,8 @@ class Check:
     status: str  # pass | warn | fail | skip
     detail: str
     evidence: str = ""
+    code: str = ""
+    params: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -98,22 +100,22 @@ def _parse_robots(text: str) -> dict[str, list[str]]:
     return agents
 
 
-def _bot_status(agents: dict[str, list[str]], bot: str) -> tuple[str, str]:
+def _bot_status(agents: dict[str, list[str]], bot: str) -> tuple[str, str, dict[str, Any]]:
     key = bot.lower()
     star = agents.get("*", [])
     specific = agents.get(key)
     block_re = re.compile(r"^disallow:\s*/\s*$", re.I)
     if specific is not None:
         if any(block_re.match(item) for item in specific):
-            return "fail", f"{bot} is disallowed at /"
+            return "fail", "bot_disallowed", {"bot": bot}
         if not specific:
-            return "warn", f"{bot} has a User-agent block but no Allow/Disallow lines"
-        return "pass", f"{bot} has a dedicated robots group"
+            return "warn", "bot_empty_group", {"bot": bot}
+        return "pass", "bot_dedicated", {"bot": bot}
     if any(block_re.match(item) for item in star):
-        return "warn", f"* disallows / (affects {bot} unless the crawler uses another group)"
+        return "warn", "bot_star_disallow", {"bot": bot}
     if "*" in agents:
-        return "pass", f"no dedicated {bot} group; falls through to *"
-    return "warn", f"no User-agent group for {bot} or *"
+        return "pass", "bot_fallback_star", {"bot": bot}
+    return "warn", "bot_no_group", {"bot": bot}
 
 
 def _json_ld_types(soup: BeautifulSoup) -> list[str]:
@@ -156,14 +158,22 @@ def _onpage(soup: BeautifulSoup, final_url: str) -> dict[str, Any]:
     canonical_tag = soup.find("link", rel=lambda value: value and "canonical" in value)
     canonical = (canonical_tag.get("href") or "").strip() if canonical_tag else ""
     h1s = [h.get_text(" ", strip=True) for h in soup.find_all("h1")]
+    h2s = [h.get_text(" ", strip=True) for h in soup.find_all("h2")]
     og_title = soup.find("meta", attrs={"property": "og:title"})
     robots_meta = soup.find("meta", attrs={"name": re.compile("^robots$", re.I)})
+    text_len = len(soup.get_text(" ", strip=True) or "")
     return {
         "title": title,
         "description": description,
         "canonical": canonical,
         "h1": h1s[:8],
         "h1_count": len(h1s),
+        "h2": h2s[:12],
+        "h2_count": len(h2s),
+        "has_article": bool(soup.find("article")),
+        "has_main": bool(soup.find("main")),
+        "has_section": bool(soup.find("section")),
+        "text_length": text_len,
         "og_title": (og_title.get("content") or "").strip() if og_title else "",
         "meta_robots": (robots_meta.get("content") or "").strip() if robots_meta else "",
         "lang": soup.html.get("lang") if soup.html else "",
@@ -199,8 +209,11 @@ def audit_url(url: str) -> SiteAudit:
 
         bot_rules = []
         for bot in AI_BOTS:
-            status, detail = _bot_status(robots_agents, bot) if robots_fetched.ok else ("skip", "robots.txt not fetched")
-            bot_rules.append({"bot": bot, "status": status, "detail": detail})
+            if robots_fetched.ok:
+                status, code, params = _bot_status(robots_agents, bot)
+            else:
+                status, code, params = "skip", "robots_missing", {}
+            bot_rules.append({"bot": bot, "status": status, "code": code, "params": params, "detail": ""})
 
         json_ld_types = _json_ld_types(soup) if homepage.ok else []
         onpage = _onpage(soup, homepage.final_url) if homepage.ok else {}
@@ -210,8 +223,10 @@ def audit_url(url: str) -> SiteAudit:
                 "homepage",
                 "Homepage fetch",
                 "pass" if homepage.ok else "fail",
-                f"HTTP {homepage.status}" if homepage.status else (homepage.error or "failed"),
+                "",
                 homepage.final_url,
+                code="http" if homepage.status else "error",
+                params={"status": homepage.status} if homepage.status else {"error": homepage.error or "failed"},
             )
         )
         checks.append(
@@ -219,17 +234,27 @@ def audit_url(url: str) -> SiteAudit:
                 "robots",
                 "robots.txt",
                 "pass" if robots_fetched.ok else "fail",
-                "found" if robots_fetched.ok else (robots_fetched.error or f"HTTP {robots_fetched.status}"),
+                "",
                 robots_fetched.final_url,
+                code="found" if robots_fetched.ok else ("http" if robots_fetched.status else "error"),
+                params={"status": robots_fetched.status} if robots_fetched.status else {"error": robots_fetched.error or "failed"},
             )
         )
         blocked_ai = [row["bot"] for row in bot_rules if row["status"] == "fail"]
+        if blocked_ai:
+            ai_status, ai_code, ai_params = "fail", "ai_blocked", {"bots": ", ".join(blocked_ai)}
+        elif robots_fetched.ok:
+            ai_status, ai_code, ai_params = "pass", "ai_ok", {}
+        else:
+            ai_status, ai_code, ai_params = "skip", "robots_missing", {}
         checks.append(
             Check(
                 "ai-bots",
                 "AI crawler robots groups",
-                "fail" if blocked_ai else ("pass" if robots_fetched.ok else "skip"),
-                f"blocked at /: {', '.join(blocked_ai)}" if blocked_ai else "no dedicated disallow-all for listed AI bots",
+                ai_status,
+                "",
+                code=ai_code,
+                params=ai_params,
             )
         )
         llms_ok = llms_fetched.ok and len(llms_fetched.body.strip()) > 0
@@ -238,8 +263,9 @@ def audit_url(url: str) -> SiteAudit:
                 "llms-txt",
                 "llms.txt",
                 "pass" if llms_ok else "warn",
-                "found" if llms_ok else "missing or empty (optional but useful for GEO)",
+                "",
                 llms_fetched.final_url,
+                code="found" if llms_ok else "llms_missing",
             )
         )
         sitemap_ok = sitemap_fetched.ok and (
@@ -250,8 +276,9 @@ def audit_url(url: str) -> SiteAudit:
                 "sitemap",
                 "Sitemap",
                 "pass" if sitemap_ok else "warn",
-                "XML sitemap detected" if sitemap_ok else "no sitemap XML at robots Sitemap /sitemap.xml",
+                "",
                 sitemap_fetched.final_url,
+                code="sitemap_ok" if sitemap_ok else "sitemap_missing",
             )
         )
         checks.append(
@@ -259,7 +286,9 @@ def audit_url(url: str) -> SiteAudit:
                 "json-ld",
                 "JSON-LD",
                 "pass" if json_ld_types else "warn",
-                ", ".join(json_ld_types) if json_ld_types else "no application/ld+json @type found on homepage",
+                "",
+                code="jsonld_types" if json_ld_types else "jsonld_missing",
+                params={"types": ", ".join(json_ld_types)} if json_ld_types else {},
             )
         )
         title_ok = bool(onpage.get("title"))
@@ -269,7 +298,9 @@ def audit_url(url: str) -> SiteAudit:
                 "onpage",
                 "Title / H1",
                 "pass" if title_ok and h1_ok else "warn",
-                f"title={'yes' if title_ok else 'no'}; h1_count={onpage.get('h1_count', 0)}",
+                "",
+                code="title_h1",
+                params={"title": title_ok, "h1_count": onpage.get("h1_count", 0)},
             )
         )
 

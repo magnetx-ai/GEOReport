@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "magup-geo-report"
 version = "0.1.0"
-description = "MagUp GEO Community Report: site GEO hygiene plus optional raw LLM answers. Not MagUp production detection."
+description = "MagUp GEO Report: open-source self-hosted generator. Configure your own keys, or contact us for a free hosted run."
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
@@ -26,6 +26,8 @@ classifiers = [
 dependencies = [
   "beautifulsoup4>=4.12",
   "httpx>=0.27",
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
 ]
 
 [project.urls]
@@ -36,5 +38,16 @@ Issues = "https://github.com/magnetx-ai/MagUp-Geo-Report/issues"
 [project.scripts]
 magup-geo-report = "magup_geo_report.cli:main"
 
+[project.optional-dependencies]
+web = ["fastapi>=0.110", "uvicorn>=0.27"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+magup_geo_report = [
+  "web/*",
+  "magup_report/*.html",
+  "magup_report/assets/*",
+  "magup_report/locale_catalogs/*",
+]

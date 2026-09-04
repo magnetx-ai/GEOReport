@@ -16,10 +16,7 @@ def collect_search_raw(
     password: str,
     domain: str,
 ) -> dict[str, Any]:
-    """One public DataForSEO live SERP call. Dump JSON. Do not interpret.
-
-    This is not MagUp Search Profile, not a ranking product, and not production scoring.
-    """
+    """One public DataForSEO live SERP call using the caller's credentials."""
     keyword = domain
     payload = [
         {
@@ -43,9 +40,8 @@ def collect_search_raw(
                 body = {"raw_text": response.text[:4000]}
             return {
                 "disclaimer": (
-                    "Raw DataForSEO payload. MagUp GEO Community Report does not turn this "
-                    "into Search Profile, competitor matrix, or production scores. "
-                    "Full GEO detection reports are produced at magup.ai."
+                    "Collected with your configured DataForSEO credentials. "
+                    "Prefer we handle it? Contact us at magup.ai — we generate it free."
                 ),
                 "endpoint": DATAFORSEO_SERP,
                 "keyword": keyword,

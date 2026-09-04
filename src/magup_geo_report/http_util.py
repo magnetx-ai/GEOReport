@@ -1,14 +1,40 @@
 from __future__ import annotations
 
+import asyncio
+import threading
 from dataclasses import dataclass
+from typing import Any, Coroutine, TypeVar
 
 import httpx
 
-USER_AGENT = (
-    "MagUp-GEO-Community-Report/0.1 "
-    "(+https://magup.ai; community hygiene check, not production crawler)"
-)
+USER_AGENT = "MagUp-GEO-Report/0.1 (+https://magup.ai)"
 TIMEOUT = httpx.Timeout(20.0, connect=10.0)
+LLM_TIMEOUT = httpx.Timeout(90.0, connect=10.0)
+ANSWER_TIMEOUT = httpx.Timeout(130.0, connect=15.0)
+
+T = TypeVar("T")
+
+
+def run_async(coro: Coroutine[Any, Any, T]) -> T:
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    holder: dict[str, Any] = {}
+
+    def worker() -> None:
+        try:
+            holder["value"] = asyncio.run(coro)
+        except Exception as exc:  # noqa: BLE001
+            holder["error"] = exc
+
+    thread = threading.Thread(target=worker)
+    thread.start()
+    thread.join()
+    if "error" in holder:
+        raise holder["error"]
+    return holder["value"]
 
 
 @dataclass
