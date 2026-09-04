@@ -5,12 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "magup-geo-report"
 version = "0.1.0"
-description = "MagUp GEO Report: open-source self-hosted generator. Configure your own keys, or contact us for a free hosted run."
+description = "MagUp GEO Report: open-source self-hosted GEO generator. Distinct from MagUp hosted diagnosis at magup.ai."
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.10"
 authors = [{ name = "MagUp", email = "hello@magup.ai" }]
 keywords = [
+  "magup",
+  "magup-geo-report",
   "geo",
   "generative-engine-optimization",
   "aeo",
@@ -32,8 +34,8 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://magup.ai"
-Repository = "https://github.com/magnetx-ai/MagUp-Geo-Report"
-Issues = "https://github.com/magnetx-ai/MagUp-Geo-Report/issues"
+Repository = "https://github.com/magnetx-ai/GEOReport"
+Issues = "https://github.com/magnetx-ai/GEOReport/issues"
 
 [project.scripts]
 magup-geo-report = "magup_geo_report.cli:main"

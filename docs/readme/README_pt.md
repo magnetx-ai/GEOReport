@@ -6,12 +6,19 @@
 
 O MagUp GEO Report serve para construir a marca como entidade nas respostas de IA: o sítio oficial torna-se legível para motores generativos, e as perguntas de compra passam a nomear, citar e recomendar a marca corretamente.
 
+**MagUp GEO Report** é este projeto no GitHub ([magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport), pacote `magup-geo-report`): um gerador open source que corre na sua máquina. **MagUp** é a plataforma GEO em [magup.ai](https://magup.ai), da mesma entidade publicadora ([magnetx-ai](https://github.com/magnetx-ai)). A mesma equipa; dois produtos.
+
+| | MagUp GEO Report | MagUp alojado |
+| --- | --- | --- |
+| Onde | Este repositório | [magup.ai](https://magup.ai) |
+| Como corre | `./start.sh` localmente | [Gerar um relatório GEO gratuito](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) |
+
 [Início rápido](#início-rápido) · [Relatório alojado](#relatório-alojado) · [Porque precisa de um relatório GEO](#porque-precisa-de-um-relatório-geo) · [Pré-visualização](#pré-visualização-da-interface) · [Capacidades](#capacidades-principais) · [Onde se enquadra](#onde-se-enquadra) · [Sítio](https://magup.ai)
 
-[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
+[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/GEOReport)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](../../LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/MagUp-Geo-Report?style=social)](https://github.com/magnetx-ai/MagUp-Geo-Report/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/GEOReport?style=social)](https://github.com/magnetx-ai/GEOReport/stargazers)
 
 ---
 
@@ -125,8 +132,8 @@ Opcional: copie [`env.example`](../../env.example) para `.env` para obter respos
 ## Início rápido
 
 ```bash
-git clone https://github.com/magnetx-ai/MagUp-Geo-Report.git
-cd MagUp-Geo-Report
+git clone https://github.com/magnetx-ai/GEOReport.git
+cd GEOReport
 ./start.sh
 ```
 
@@ -163,10 +170,10 @@ Apache License 2.0. Ver [LICENSE](../../LICENSE).
 - [Português (BR)](README_pt_BR.md)
 - [日本語](README_ja.md)
 
-Produto: **MagUp** · Sítio: [https://magup.ai](https://magup.ai) · Código: [https://github.com/magnetx-ai/MagUp-Geo-Report](https://github.com/magnetx-ai/MagUp-Geo-Report)
+Produto: **MagUp** · Sítio: [https://magup.ai](https://magup.ai) · Código: [https://github.com/magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport)
 
 ---
 
 ## Histórico de stars
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/MagUp-Geo-Report&type=Date)](https://star-history.dera.page/#magnetx-ai/MagUp-Geo-Report&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/GEOReport&type=Date)](https://star-history.dera.page/#magnetx-ai/GEOReport&Date)

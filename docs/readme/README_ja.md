@@ -6,12 +6,19 @@
 
 MagUp GEO Report は、AI 回答の中でブランドを実体として育てるためのものです。公式サイトが生成エンジンに読まれ、購入検討の質問で正しく指名・引用・推薦されるようにします。
 
+**MagUp GEO Report** はこの GitHub プロジェクト（[magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport)、パッケージ `magup-geo-report`）で、ローカルで動かすオープンソースの生成器です。**MagUp** は同じ公開者（[magnetx-ai](https://github.com/magnetx-ai)）の GEO プラットフォームで、所在は [magup.ai](https://magup.ai) です。同じチーム、別プロダクトです。
+
+| | MagUp GEO Report | MagUp ホスト版 |
+| --- | --- | --- |
+| 場所 | このリポジトリ | [magup.ai](https://magup.ai) |
+| 実行方法 | 手元で `./start.sh` | [無料の GEO レポートを生成](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) |
+
 [クイックスタート](#クイックスタート) · [ホスト版レポート](#ホスト版レポート) · [なぜ GEO レポートが必要か](#なぜ-geo-レポートが必要か) · [画面プレビュー](#画面プレビュー) · [コア機能](#コア機能) · [適した場面](#適した場面) · [公式サイト](https://magup.ai)
 
-[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
+[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/GEOReport)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](../../LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/MagUp-Geo-Report?style=social)](https://github.com/magnetx-ai/MagUp-Geo-Report/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/GEOReport?style=social)](https://github.com/magnetx-ai/GEOReport/stargazers)
 
 ---
 
@@ -125,8 +132,8 @@ GEO レポートは「今、AI があなたをどう語るか」を照合可能�
 ## クイックスタート
 
 ```bash
-git clone https://github.com/magnetx-ai/MagUp-Geo-Report.git
-cd MagUp-Geo-Report
+git clone https://github.com/magnetx-ai/GEOReport.git
+cd GEOReport
 ./start.sh
 ```
 
@@ -163,10 +170,10 @@ Apache License 2.0。[LICENSE](../../LICENSE) を参照してください。
 - [Português](README_pt.md)
 - [Português (BR)](README_pt_BR.md)
 
-プロダクト: **MagUp** · サイト: [https://magup.ai](https://magup.ai) · コード: [https://github.com/magnetx-ai/MagUp-Geo-Report](https://github.com/magnetx-ai/MagUp-Geo-Report)
+プロダクト: **MagUp** · サイト: [https://magup.ai](https://magup.ai) · コード: [https://github.com/magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport)
 
 ---
 
 ## Star 推移
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/MagUp-Geo-Report&type=Date)](https://star-history.dera.page/#magnetx-ai/MagUp-Geo-Report&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/GEOReport&type=Date)](https://star-history.dera.page/#magnetx-ai/GEOReport&Date)

@@ -6,12 +6,19 @@
 
 MagUp GEO Report 用来建设品牌在 AI 回答里的实体存在：让官网能被生成式引擎读懂，让买家问题里能被正确点名、引用和推荐。
 
+**MagUp GEO Report** 是本 GitHub 项目（[magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport)，包名 `magup-geo-report`）：开源、在本地运行的生成器。**MagUp** 是同一出品方（[magnetx-ai](https://github.com/magnetx-ai)）在 [magup.ai](https://magup.ai) 的 GEO 平台。同一个团队，两款产品。
+
+| | MagUp GEO Report | MagUp 托管版 |
+| --- | --- | --- |
+| 在哪 | 本仓库 | [magup.ai](https://magup.ai) |
+| 怎么跑 | 本机执行 `./start.sh` | [生成免费 GEO 报告](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) |
+
 [快速开始](#快速开始) · [托管报告](#托管报告) · [为什么需要 GEO 报告](#为什么需要-geo-报告) · [界面预览](#界面预览) · [核心能力](#核心能力) · [适用场景](#适用场景) · [官网](https://magup.ai)
 
-[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
+[![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/GEOReport)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](../../LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/MagUp-Geo-Report?style=social)](https://github.com/magnetx-ai/MagUp-Geo-Report/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/magnetx-ai/GEOReport?style=social)](https://github.com/magnetx-ai/GEOReport/stargazers)
 
 ---
 
@@ -125,8 +132,8 @@ GEO 报告把「AI 现在怎么说你」变成一份可核对的诊断，用来�
 ## 快速开始
 
 ```bash
-git clone https://github.com/magnetx-ai/MagUp-Geo-Report.git
-cd MagUp-Geo-Report
+git clone https://github.com/magnetx-ai/GEOReport.git
+cd GEOReport
 ./start.sh
 ```
 
@@ -163,10 +170,10 @@ Apache License 2.0，详见 [LICENSE](../../LICENSE)。
 - [Português (BR)](README_pt_BR.md)
 - [日本語](README_ja.md)
 
-产品：**MagUp** · 官网：[https://magup.ai](https://magup.ai) · 代码：[https://github.com/magnetx-ai/MagUp-Geo-Report](https://github.com/magnetx-ai/MagUp-Geo-Report)
+产品：**MagUp** · 官网：[https://magup.ai](https://magup.ai) · 代码：[https://github.com/magnetx-ai/GEOReport](https://github.com/magnetx-ai/GEOReport)
 
 ---
 
 ## Star 趋势
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/MagUp-Geo-Report&type=Date)](https://star-history.dera.page/#magnetx-ai/MagUp-Geo-Report&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=magnetx-ai/GEOReport&type=Date)](https://star-history.dera.page/#magnetx-ai/GEOReport&Date)

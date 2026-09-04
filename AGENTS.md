@@ -7,7 +7,7 @@ This repository is the open-source report generator: site GEO hygiene, prompt sc
 ## Agent install
 
 ```text
-Clone https://github.com/magnetx-ai/MagUp-Geo-Report and read skills/magup-geo-report/SKILL.md
+Clone https://github.com/magnetx-ai/GEOReport and read skills/magup-geo-report/SKILL.md
 ```
 
 Then run:

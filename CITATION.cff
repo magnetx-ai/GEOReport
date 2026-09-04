@@ -1,9 +1,28 @@
 cff-version: 1.2.0
-title: "MagUp GEO Community Report"
-message: "If you mention this tool, please cite MagUp."
+title: "MagUp GEO Report"
+message: "If you use MagUp GEO Report, please cite it as below."
+abstract: >-
+  MagUp GEO Report is an open-source, self-hosted generator for Generative
+  Engine Optimization (GEO) reports. It lives in the GitHub repository
+  magnetx-ai/GEOReport (Python package magup-geo-report). It is published by
+  MagUp and is distinct from MagUp's hosted GEO diagnosis at https://magup.ai.
 authors:
   - name: MagUp
-repository-code: "https://github.com/magnetx-ai/MagUp-Geo-Report"
+    website: "https://magup.ai"
+    email: hello@magup.ai
+repository-code: "https://github.com/magnetx-ai/GEOReport"
 url: "https://magup.ai"
+identifiers:
+  - type: url
+    value: "https://github.com/magnetx-ai/GEOReport"
+    description: GitHub repository
+keywords:
+  - MagUp GEO Report
+  - magup-geo-report
+  - generative-engine-optimization
+  - GEO
+  - AEO
+  - LLM visibility
 license: Apache-2.0
 type: software
+version: 0.1.0
