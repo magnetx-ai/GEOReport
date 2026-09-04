@@ -15,3 +15,20 @@ output/
 .idea/
 .vscode/
 .python-version
+
+# MagUp report engine — local only; not the public community CLI
+src/magup_geo_report/magup_report/
+src/magup_geo_report/analyze.py
+src/magup_geo_report/dataforseo_answers.py
+src/magup_geo_report/offsite.py
+src/magup_geo_report/pipeline.py
+src/magup_geo_report/prompt_gen.py
+src/magup_geo_report/geo_report.py
+src/magup_geo_report/web/
+src/magup_geo_report/webapp.py
+src/magup_geo_report/site_brief.py
+src/magup_geo_report/i18n.py
+src/magup_geo_report/envutil.py
+start.sh
+docs/readme/
+
