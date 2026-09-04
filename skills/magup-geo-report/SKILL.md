@@ -5,7 +5,7 @@ description: "Generate a MagUp GEO Report for a URL: site GEO hygiene, prompt sc
 
 # MagUp GEO Report
 
-MagUp is a Generative Engine Optimization (GEO) platform. Hosted diagnosis with a human walkthrough is at https://magup.ai (click **Get Plan**).
+MagUp is a Generative Engine Optimization (GEO) platform. A hosted run without local setup is at https://magup.ai.
 
 Use this skill when the user wants a GEO site report, `llms.txt` / robots / JSON-LD hygiene, prompt-based multi-model answers, or a local visibility dashboard.
 

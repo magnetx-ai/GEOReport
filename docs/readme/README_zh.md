@@ -6,9 +6,7 @@
 
 MagUp GEO Report 用来建设品牌在 AI 回答里的实体存在：让官网能被生成式引擎读懂，让买家问题里能被正确点名、引用和推荐。
 
-不想自己搭环境？打开 [magup.ai](https://magup.ai)，点击 **[Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)**，填写品牌基本信息，MagUp 会免费生成检测报告并人工解读。
-
-[快速开始](#快速开始) · [为什么需要 GEO 报告](#为什么需要-geo-报告) · [界面预览](#界面预览) · [核心能力](#核心能力) · [适用场景](#适用场景) · [官网](https://magup.ai)
+[快速开始](#快速开始) · [托管报告](#托管报告) · [为什么需要 GEO 报告](#为什么需要-geo-报告) · [界面预览](#界面预览) · [核心能力](#核心能力) · [适用场景](#适用场景) · [官网](https://magup.ai)
 
 [![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
@@ -108,7 +106,7 @@ GEO 报告把「AI 现在怎么说你」变成一份可核对的诊断，用来�
 | 品牌实体摸底 | 填写官网 URL 和品牌名后生成 | AI 是否把你当成可识别、可引用的实体 |
 | 品类推荐位 | 带上竞品，看无品牌问题里谁被点名 | 漏斗前端的实体占位 |
 | 多语言市场 | 选择报告语言后生成 | 同一套实体诊断覆盖中 / 英 / 葡 / 日等 |
-| 交给 MagUp 来做 | 在 [magup.ai](https://magup.ai) 点击 [Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) | MagUp 生成报告并人工解读 |
+| 不做本地部署 | [托管报告](#托管报告) | 同一套诊断，无需安装 Python、密钥或本地服务 |
 
 ---
 
@@ -135,6 +133,14 @@ cd MagUp-Geo-Report
 脚本会安装依赖并打开 [http://127.0.0.1:8787](http://127.0.0.1:8787)。填写官网与品牌名，生成提示词，再点 **生成报告**。
 
 Windows 请在 Git Bash 或 WSL 中运行同一脚本。
+
+---
+
+## 托管报告
+
+本仓库提供 AI 搜索可见性分析的核心能力。如果希望不做本地环境配置、直接跑完整 GEO 诊断，可以使用托管版本，免费生成报告并由 MagUp 一起解读。
+
+[生成免费 GEO 报告](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)
 
 ---
 

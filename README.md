@@ -6,9 +6,7 @@
 
 MagUp GEO Report helps you build the brand as an entity inside AI answers: the official site is readable to generative engines, and buyer questions name, cite, and recommend you correctly.
 
-Prefer MagUp to run it and walk you through the findings? Open [magup.ai](https://magup.ai), click **[Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)**, share a few details about the brand, and the team generates the report and interprets it with you — free of charge.
-
-[Quick start](#quick-start) · [Why a GEO report](#why-you-need-a-geo-report) · [Interface preview](#interface-preview) · [Core capabilities](#core-capabilities) · [Where it fits](#where-it-fits) · [Website](https://magup.ai)
+[Quick start](#quick-start) · [Hosted report](#hosted-report) · [Why a GEO report](#why-you-need-a-geo-report) · [Interface preview](#interface-preview) · [Core capabilities](#core-capabilities) · [Where it fits](#where-it-fits) · [Website](https://magup.ai)
 
 [![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
@@ -108,7 +106,7 @@ Report languages: English, Simplified Chinese, Portuguese (PT / BR), French, Ara
 | Brand entity baseline | Official URL + brand name, then generate | Whether AI treats you as a recognizable, citable entity |
 | Category recommendation | Add competitors and generate | Who occupies the entity slot on unbranded questions |
 | Multilingual markets | Pick a report language, then generate | The same entity diagnosis in zh / en / pt / ja and more |
-| Done-for-you diagnosis | [Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) on [magup.ai](https://magup.ai) | MagUp generates the report and interprets it with you |
+| Skip local setup | [Hosted GEO report](#hosted-report) | Same diagnosis, without installing Python, keys, or a local server |
 
 ---
 
@@ -135,6 +133,14 @@ cd MagUp-Geo-Report
 The script installs dependencies and opens [http://127.0.0.1:8787](http://127.0.0.1:8787). Enter the official site and brand name, generate prompts, then click **Generate report**.
 
 On Windows, run the same script from Git Bash or WSL.
+
+---
+
+## Hosted report
+
+This project is the core generator for analyzing AI search visibility. If you would rather run a full GEO analysis without setting up the environment locally, MagUp can generate a free hosted report and walk through the findings with you.
+
+[Generate a free GEO report](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)
 
 ---
 

@@ -1,6 +1,6 @@
 # MagUp GEO Report
 
-MagUp is a Generative Engine Optimization (GEO) platform. Hosted diagnosis with a human walkthrough lives at https://magup.ai — open the site, click **Get Plan**, and share a few brand details.
+MagUp is a Generative Engine Optimization (GEO) platform. This repository is the open-source generator. A hosted run without local setup is at https://magup.ai.
 
 This repository is the open-source report generator: site GEO hygiene, prompt scenarios, multi-model answer capture, and a local diagnostic dashboard.
 

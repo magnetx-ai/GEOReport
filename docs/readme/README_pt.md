@@ -6,9 +6,7 @@
 
 O MagUp GEO Report serve para construir a marca como entidade nas respostas de IA: o sítio oficial torna-se legível para motores generativos, e as perguntas de compra passam a nomear, citar e recomendar a marca corretamente.
 
-Prefere que a MagUp execute o diagnóstico e o explique consigo? Abra [magup.ai](https://magup.ai), clique em **[Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)**, indique alguns dados da marca e a equipa gera o relatório e faz a leitura consigo — sem custos.
-
-[Início rápido](#início-rápido) · [Porque precisa de um relatório GEO](#porque-precisa-de-um-relatório-geo) · [Pré-visualização](#pré-visualização-da-interface) · [Capacidades](#capacidades-principais) · [Onde se enquadra](#onde-se-enquadra) · [Sítio](https://magup.ai)
+[Início rápido](#início-rápido) · [Relatório alojado](#relatório-alojado) · [Porque precisa de um relatório GEO](#porque-precisa-de-um-relatório-geo) · [Pré-visualização](#pré-visualização-da-interface) · [Capacidades](#capacidades-principais) · [Onde se enquadra](#onde-se-enquadra) · [Sítio](https://magup.ai)
 
 [![Version](https://img.shields.io/badge/version-0.1.0-2563eb)](https://github.com/magnetx-ai/MagUp-Geo-Report)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](https://www.python.org/)
@@ -108,7 +106,7 @@ Línguas do relatório: inglês, chinês simplificado, português (PT / BR), fra
 | Linha de base da entidade | URL oficial + nome da marca | Se a IA a trata como entidade reconhecível e citável |
 | Recomendação de categoria | Adicione concorrentes e gere | Quem ocupa o lugar da entidade em perguntas sem marca |
 | Mercados multilingues | Escolha a língua do relatório e gere | O mesmo diagnóstico de entidade em zh / en / pt / ja e outras |
-| Diagnóstico feito pela MagUp | [Get Plan](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590) em [magup.ai](https://magup.ai) | A MagUp gera o relatório e interpreta-o consigo |
+| Sem instalação local | [Relatório alojado](#relatório-alojado) | O mesmo diagnóstico, sem Python, chaves nem servidor local |
 
 ---
 
@@ -135,6 +133,14 @@ cd MagUp-Geo-Report
 O script instala as dependências e abre [http://127.0.0.1:8787](http://127.0.0.1:8787). Indique o sítio oficial e o nome da marca, gere os prompts e clique em **Generate report**.
 
 No Windows, execute o mesmo script no Git Bash ou no WSL.
+
+---
+
+## Relatório alojado
+
+Este projeto fornece a funcionalidade central para analisar a visibilidade em pesquisa de IA. Se preferir uma análise GEO completa sem configurar o ambiente localmente, pode usar a versão alojada para gerar um relatório gratuito. A MagUp explica os resultados consigo.
+
+[Gerar um relatório GEO gratuito](https://console.magup.ai/survey?templateId=6a478e309d2f99db4ce05590)
 
 ---
 
